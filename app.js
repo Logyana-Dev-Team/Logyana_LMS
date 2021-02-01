@@ -47,9 +47,9 @@ const userSchema = new mongoose.Schema({
   name: String,
   lname: String,
   email: String,
-  password: String,
   phone: String,
   associate: String,
+  salesPerson: String,
   response: String,
   comments: String,
 });
@@ -101,6 +101,29 @@ associateSchema.plugin(passportLocalMongoose);
 const Associate = new mongoose.model("Associate", associateSchema);
 passport.use("associate", Associate.createStrategy());
 
+const salesPersonSchema = new mongoose.Schema({
+  name: String,
+  lname: String,
+  email: String,
+  password: String,
+  phone: String,
+  assignedClient: [
+    {
+      userId: String,
+      name: String,
+      email: String,
+      phone: String,
+      response: String,
+      comments: String,
+    },
+  ],
+});
+
+salesPersonSchema.plugin(passportLocalMongoose);
+
+const SalesPerson = new mongoose.model("SalesPerson", salesPersonSchema);
+passport.use("salesPerson", SalesPerson.createStrategy());
+
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
@@ -129,9 +152,19 @@ app.get("/adminLogin", function (req, res) {
 
 app.get("/adminDashboard", async function (req, res) {
   const userCount = await User.countDocuments();
+  const user = await User.find({});
+  const pending = await User.find({ response: "" });
+  const scheduled = await User.find({ response: "Scheduled Call" });
+  const pendingCount = pending.length;
+  const scheduledCount = scheduled.length;
   const associateCount = await Associate.countDocuments();
   if ((userCount, associateCount)) {
     res.render("adminDashboard", {
+      user: user,
+      pendingCount: pendingCount,
+      scheduledCount: scheduledCount,
+      pending: pending,
+      scheduled: scheduled,
       userCount: userCount,
       associateCount: associateCount,
     });
@@ -173,18 +206,28 @@ app.get("/addAssociate", function (req, res) {
   res.render("addAssociate");
 });
 
+app.get("/addSalesPerson", function (req, res) {
+  res.render("addSalesPerson");
+});
+
 app.get("/associateLogin", function (req, res) {
   var errorMsg = req.flash("error")[0];
   res.render("associateLogin", { errorMsg });
 });
 
+app.get("/salesPersonLogin", function (req, res) {
+  var errorMsg = req.flash("error")[0];
+  res.render("salesPersonLogin", { errorMsg });
+});
+
 app.get("/tables", async function (req, res) {
   const users = await User.find({});
   const associate = await Associate.find({});
-  // console.log(users);
+  const salesPerson = await SalesPerson.find({});
   res.render("tables", {
     tableUserData: users,
     tableAssociateData: associate,
+    salesPerson: salesPerson,
   });
 });
 
@@ -285,54 +328,100 @@ app.post("/assignAssociate", async function (req, res) {
   );
 });
 
+app.post("/assignSalesPerson", async function (req, res) {
+  const salesPerson = await SalesPerson.findById(req.body.salesPersonId, {});
+  console.log(salesPerson);
+  const users = await User.findById(req.body.userId, {});
+  const salesPersonName = salesPerson.name;
+  const salesPersonLname = salesPerson.lname;
+  const salesPersonFullName = salesPersonName + " " + salesPersonLname;
+  const userId = users.id;
+  const salesPersonId = salesPerson.id;
+  const userName = users.name;
+  const userLname = users.lname;
+  const userFullName = userName + " " + userLname;
+  const userEmail = users.username;
+  const userPhone = users.phone;
+
+  User.findByIdAndUpdate(
+    userId,
+    { salesPerson: salesPersonFullName },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        SalesPerson.findById(salesPersonId, function (err, docs) {
+          if (err) {
+            console.log(err);
+          } else {
+            docs.update(
+              {
+                $addToSet: {
+                  assignedClient: {
+                    _id: userId,
+                    name: userFullName,
+                    email: userEmail,
+                    phone: userPhone,
+                  },
+                },
+              },
+              function (err, list) {
+                if (err) {
+                  res.json({ msg: "error" });
+                } else {
+                  res.json({ msg: "success" });
+                }
+              }
+            );
+          }
+        });
+      }
+    }
+  );
+});
+
 app.get("/logout", function (req, res) {
   req.logout();
   res.redirect("/");
 });
 
 app.post("/register", function (req, res) {
-  User.register(
-    {
-      name: req.body.name,
-      lname: req.body.lname,
-      username: req.body.username,
-      phone: req.body.phone,
-    },
-    req.body.password,
-    function (err, user) {
-      if (err) {
-        console.log(err);
-        res.redirect("/register");
-      } else {
-        passport.authenticate("local")(req, res, function () {
-          res.redirect("/");
-        });
-      }
+  const user = new User({
+    name: req.body.name,
+    lname: req.body.lname,
+    username: req.body.username,
+    phone: req.body.phone,
+    associate: "",
+  });
+  small.save(function (err) {
+    if (err) {
+      console.log(err);
+      res.redirect("/register");
+    } else {
+      res.redirect("/");
     }
-  );
+    // saved!
+  });
 });
 
 app.post("/addClient", function (req, res) {
-  User.register(
-    {
-      name: req.body.name,
-      lname: req.body.lname,
-      username: req.body.username,
-      phone: req.body.phone,
-    },
-    req.body.password,
-    function (err, user) {
-      if (err) {
-        console.log(err);
-        res.redirect("/register");
-      } else {
-        passport.authenticate("local")(req, res, function () {
-          console.log("Client Added Successfully");
-          res.redirect("/addClient");
-        });
-      }
+  const user = new User({
+    name: req.body.name,
+    lname: req.body.lname,
+    username: req.body.username,
+    phone: req.body.phone,
+    associate: "",
+    response: "",
+  });
+  user.save(function (err) {
+    if (err) {
+      console.log(err);
+      res.redirect("/register");
+    } else {
+      res.redirect(req.get("referer"));
     }
-  );
+    // saved!
+  });
 });
 
 app.post("/addAssociate", function (req, res) {
@@ -354,6 +443,26 @@ app.post("/addAssociate", function (req, res) {
   );
 });
 
+app.post("/addSalesPerson", function (req, res) {
+  SalesPerson.register(
+    {
+      name: req.body.name,
+      lname: req.body.lname,
+      username: req.body.username,
+      phone: req.body.phone,
+    },
+    req.body.password,
+    function (err, user) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Sales Person Added Successfully");
+        res.redirect(req.get("referer"));
+      }
+    }
+  );
+});
+
 app.get("/associateTables", function (req, res) {
   Associate.find({}, function (err, foundAssociate) {
     if (err) {
@@ -361,6 +470,20 @@ app.get("/associateTables", function (req, res) {
     } else {
       if (foundAssociate) {
         res.render("associateTables", {
+          tableAssociateData: foundAssociate,
+        });
+      }
+    }
+  });
+});
+
+app.get("/salesPersonTables", function (req, res) {
+  SalesPerson.find({}, function (err, foundAssociate) {
+    if (err) {
+      res.redirect("/404");
+    } else {
+      if (foundAssociate) {
+        res.render("salesPersonTables", {
           tableAssociateData: foundAssociate,
         });
       }
@@ -407,8 +530,6 @@ app.post("/removeAssociate", async function (req, res) {
   const userId = await User.findById(req.body.userId, {});
   var str = req.body.associateName;
   var name = str.split(" ");
-  console.log(name[0]);
-  // console.log(userId._id);
   User.findByIdAndUpdate(
     userId,
     { associate: "", response: "", comments: "" },
@@ -435,6 +556,34 @@ app.post("/removeAssociate", async function (req, res) {
       }
     }
   );
+});
+
+app.post("/removeSalesPerson", async function (req, res) {
+  const userId = await User.findById(req.body.userId, {});
+  var str = req.body.salesPersonName;
+  var name = str.split(" ");
+  User.findByIdAndUpdate(userId, { salesPerson: "" }, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      SalesPerson.findOneAndUpdate(
+        { name: name },
+        { $pull: { assignedClient: { _id: req.body.userId } } },
+        { new: true },
+        function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            if (err) {
+              res.json({ msg: "error" });
+            } else {
+              res.json({ msg: "success" });
+            }
+          }
+        }
+      );
+    }
+  });
 });
 
 app.post("/changeStatus/:id", async function (req, res) {

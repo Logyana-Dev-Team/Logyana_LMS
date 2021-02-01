@@ -45,3 +45,49 @@ function assignAssociate(associateId, userId) {
     },
   });
 }
+
+function removeSalesPerson(userId, salesPersonName) {
+  $.ajax({
+    url: "/removeSalesPerson",
+    method: "post",
+    dataType: "json",
+    data: {
+      userId: userId,
+      salesPersonName: salesPersonName,
+    },
+    beforeSend: function () {
+      // Show image container
+      $("#loader").show();
+    },
+    success: function (response) {
+      $("#loader").hide();
+      location.reload();
+    },
+    error: function (response) {
+      alert("server error occured");
+    },
+  });
+}
+
+function assignSalesPerson(salesPersonId, userId) {
+  $.ajax({
+    url: "/assignSalesPerson",
+    method: "post",
+    dataType: "json",
+    data: {
+      userId: userId,
+      salesPersonId: salesPersonId,
+    },
+    beforeSend: function () {
+      // Show image container
+      $("#loader").show();
+    },
+    success: function (response) {
+      location.reload();
+      $("#loader").hide();
+    },
+    error: function (response) {
+      alert("server error occured");
+    },
+  });
+}

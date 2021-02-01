@@ -10,7 +10,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Admin Dashboard | Customers</title>
+    <title>Admin Dashboard | Sales Persons</title>
 
     <!-- Custom fonts for this template -->
     <link
@@ -25,7 +25,6 @@
 
     <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet" />
 
     <!-- Custom styles for this page -->
     <link
@@ -35,9 +34,6 @@
   </head>
 
   <body id="page-top">
-    <div id="loader" style="display: none" class="loader-bg">
-      <div class="loader"></div>
-    </div>
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- Sidebar -->
@@ -82,7 +78,7 @@
             aria-controls="collapseOne"
           >
             <i class="fas fa-user"></i>
-            <span>Customers</span>
+            <span>Clients</span>
           </a>
           <div
             id="collapseOne"
@@ -91,14 +87,12 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Customers:</h6>
-              <a class="collapse-item" href="/addClient">Add Customers</a>
-              <a class="collapse-item" href="/tables">List Customers</a>
+              <h6 class="collapse-header">Clients:</h6>
+              <a class="collapse-item" href="/addClient">Add Clients</a>
+              <a class="collapse-item" href="/tables">List Clients</a>
             </div>
           </div>
         </li>
-        <!-- Nav Item - Pages Collapse Menu -->
-        <!-- Divider -->
         <hr class="sidebar-divider" />
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
@@ -128,6 +122,8 @@
             </div>
           </div>
         </li>
+        <!-- Nav Item - Pages Collapse Menu -->
+        <!-- Divider -->
         <hr class="sidebar-divider" />
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
@@ -150,15 +146,16 @@
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Sales Person:</h6>
-              <a class="collapse-item" href="/addSalesPerson"
+              <a class="collapse-item" href="/addAssociate"
                 >Add Sales Persons</a
               >
-              <a class="collapse-item" href="/salesPersonTables"
+              <a class="collapse-item" href="/associateTables"
                 >List Sales Persons</a
               >
             </div>
           </div>
         </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block" />
 
@@ -251,7 +248,7 @@
             <div class="card shadow mb-4">
               <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                  Customer Database
+                  Sales Person Database
                 </h6>
               </div>
               <div class="card-body">
@@ -262,152 +259,29 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Mobile No.</th>
-                        <th>Status</th>
-                        <th>Comments</th>
-                        <th>Telecaller Assigned</th>
-                        <th>Sales Person Assigned</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
-
-                    <tbody style="font-size: 15px">
-                      <% tableUserData.forEach(function (user){%>
+                    <tbody>
+                      <% tableAssociateData.forEach(function (associate){%>
                       <tr>
-                        <td><%= user.name %>&nbsp;<%= user.lname %></td>
-                        <td><%= user.username %></td>
-                        <td><%= user.phone %></td>
                         <td>
-                          <%if (user.response==""||user.response==null) {%>
-                          <span
-                            class="badge rounded-pill bg-warning text-dark"
-                            style="width: 100%; color: #000 !important"
-                            >Pending</span
-                          >
-                          <% }else if (user.response=="Interested"){ %>
-                          <span
-                            class="badge rounded-pill bg-success text-dark"
-                            style="width: 100%; color: #fff !important"
-                            >Interested</span
-                          >
-                          <% }else if(user.response=="Not Interested"){ %>
-                          <span
-                            class="badge rounded-pill bg-danger text-dark"
-                            style="width: 100%; color: #fff !important"
-                            >Not Interested</span
-                          >
-                          <% }else if(user.response=="Scheduled Call"){ %>
-                          <span
-                            class="badge rounded-pill bg-primary text-dark"
-                            style="width: 100%; color: #fff !important"
-                            >Scheduled Call</span
-                          >
-                          <% }else if(user.response=="Scheduled Visit"){ %>
-                          <span
-                            class="badge rounded-pill bg-success text-dark"
-                            style="width: 100%; color: #fff !important"
-                            >Scheduled Visit</span
-                          >
-                          <% } %>
+                          <%= associate.name %>&nbsp;<%= associate.lname %>
                         </td>
-                        <td><%= user.comments %></td>
+                        <td><%= associate.username %></td>
+                        <td><%= associate.phone %></td>
                         <td>
-                          <% if ( user.associate == "") { %>
-                          <div id="dropdown" class="dropdown">
-                            <button
-                              class="btn btn-primary btn-sm dropdown-toggle"
-                              type="button"
-                              id="dropdownMenuButton"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                              style="width: 100%"
-                            >
-                              Assign Telecaller
-                            </button>
-                            <div
-                              class="dropdown-menu"
-                              style="width: 100%"
-                              aria-labelledby="dropdownMenuButton"
-                            >
-                              <% tableAssociateData.forEach(function
-                              (associate){%>
-                              <button
-                                class="dropdown-item"
-                                onclick="assignAssociate('<%= associate.id %>','<%= user.id %>')"
-                              >
-                                <%= associate.name %> <%= associate.lname %>
-                              </button>
-                              <%})%>
-                            </div>
-                          </div>
-                          <% } else { %>
-                          <div
-                            id="userAssociate"
-                            style="
-                              justify-content: space-between;
-                              display: flex;
-                            "
+                          <form
+                            action="/associateProfile/<%= associate.id %>?_method=GET"
+                            method="GET"
                           >
-                            <%= user.associate %>
-                            <div style="display: inline-flex">
-                              <button
-                                class="btn btn-danger btn-sm"
-                                onclick="removeAssociate('<%= user.id %>','<%= user.associate %>')"
-                              >
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                          <% } %>
-                        </td>
-                        <td>
-                          <%if(user.response=="Scheduled Visit"){%>
-                          <%if(user.salesPerson==""){%>
-                          <div id="dropdown" class="dropdown">
                             <button
-                              class="btn btn-primary btn-sm dropdown-toggle"
-                              type="button"
-                              id="dropdownMenuButton"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                              style="width: 100%"
+                              class="btn btn-success btn-sm"
+                              type="submit"
                             >
-                              Assign Sales Person
+                              <i class="fas fa-check"></i>&nbsp;View Profile
                             </button>
-                            <div
-                              class="dropdown-menu"
-                              style="width: 100%"
-                              aria-labelledby="dropdownMenuButton"
-                            >
-                              <%salesPerson.forEach(function(salesPerson){%>
-                              <button
-                                class="dropdown-item"
-                                onclick="assignSalesPerson('<%= salesPerson.id %>','<%= user.id %>')"
-                              >
-                                <%= salesPerson.name %> <%= salesPerson.lname %>
-                              </button>
-                              <%})%>
-                            </div>
-                          </div>
-                          <% } else { %>
-                          <div
-                            id="userAssociate"
-                            style="
-                              justify-content: space-between;
-                              display: flex;
-                            "
-                          >
-                            <%= user.salesPerson %>
-                            <div style="display: inline-flex">
-                              <button
-                                class="btn btn-danger btn-sm"
-                                onclick="removeSalesPerson('<%= user.id %>','<%= user.salesPerson %>')"
-                              >
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                          <%}%> <%}%>
+                          </form>
                         </td>
                       </tr>
                       <%})%>
@@ -417,7 +291,11 @@
               </div>
             </div>
           </div>
+          <!-- /.container-fluid -->
         </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
         <footer class="sticky-footer bg-white">
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
@@ -425,9 +303,13 @@
             </div>
           </div>
         </footer>
+        <!-- End of Footer -->
       </div>
+      <!-- End of Content Wrapper -->
     </div>
+    <!-- End of Page Wrapper -->
 
+    <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
       <i class="fas fa-angle-up"></i>
     </a>
@@ -471,8 +353,6 @@
       </div>
     </div>
 
-    <script type="text/javascript"></script>
-
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -489,6 +369,5 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
-    <script src="js/ajax.js"></script>
   </body>
 </html>
