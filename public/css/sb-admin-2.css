@@ -10048,7 +10048,7 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #4e73df !important;
+  color: #ff9e27 !important;
 }
 
 a.text-primary:hover,
@@ -10369,7 +10369,7 @@ a:focus {
 
 .bg-gradient-primary {
   background-color: #4e73df;
-  background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+  background-image: linear-gradient(180deg, #ff9e27 10%, #be2222 100%);
   background-size: cover;
 }
 
@@ -10848,7 +10848,7 @@ a:focus {
   text-transform: uppercase;
   font-weight: 800;
   font-size: 0.65rem;
-  color: #b7b9cc;
+  color: #be2222;
 }
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item,

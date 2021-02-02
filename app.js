@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require("passport-local").Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const flash = require("connect-flash");
 const app = express();
@@ -43,6 +44,12 @@ mongoose.connect(
 mongoose.set("useCreateIndex", true);
 mongoose.set("useFindAndModify", false);
 
+function SessionConstructor(userId, userGroup, details) {
+  this.userId = userId;
+  this.userGroup = userGroup;
+  this.details = details;
+}
+
 const userSchema = new mongoose.Schema({
   name: String,
   lname: String,
@@ -74,9 +81,7 @@ adminSchema.plugin(findOrCreate);
 adminSchema.index({ unique: false });
 
 const Admin = new mongoose.model("Admin", adminSchema);
-
-passport.use("Local", User.createStrategy());
-passport.use("Local1", Admin.createStrategy());
+passport.use("admin", Admin.createStrategy());
 
 const associateSchema = new mongoose.Schema({
   name: String,
@@ -124,14 +129,52 @@ salesPersonSchema.plugin(passportLocalMongoose);
 const SalesPerson = new mongoose.model("SalesPerson", salesPersonSchema);
 passport.use("salesPerson", SalesPerson.createStrategy());
 
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
+passport.serializeUser(function (userObject, done) {
+  let userGroup = "Admin";
+  let userPrototype = Object.getPrototypeOf(userObject);
+  if (userPrototype === Admin.prototype) {
+    userGroup = "Admin";
+  } else if (userPrototype === Associate.prototype) {
+    userGroup = "Associate";
+  } else if (userPrototype === SalesPerson.prototype) {
+    userGroup = "SalesPerson";
+  }
+  let sessionConstructor = new SessionConstructor(userObject.id, userGroup, "");
+  done(null, sessionConstructor);
 });
 
-passport.deserializeUser(function (id, done) {
-  Associate.findById(id, function (err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(function (sessionConstructor, done) {
+  if (sessionConstructor.userGroup == "Admin") {
+    Admin.findOne(
+      {
+        _id: sessionConstructor.userId,
+      },
+      "-localStrategy.password",
+      function (err, user) {
+        done(err, user);
+      }
+    );
+  } else if (sessionConstructor.userGroup == "Associate") {
+    Associate.findOne(
+      {
+        _id: sessionConstructor.userId,
+      },
+      "-localStrategy.password",
+      function (err, user) {
+        done(err, user);
+      }
+    );
+  } else if (sessionConstructor.userGroup == "SalesPerson") {
+    SalesPerson.findOne(
+      {
+        _id: sessionConstructor.userId,
+      },
+      "-localStrategy.password",
+      function (err, user) {
+        done(err, user);
+      }
+    );
+  }
 });
 
 app.use(async (req, res, next) => {
@@ -147,26 +190,35 @@ app.use(async (req, res, next) => {
 });
 
 app.get("/adminLogin", function (req, res) {
-  res.render("adminLogin");
+  var errorMsg = req.flash("error")[0];
+  res.render("adminLogin", { errorMsg });
 });
 
 app.get("/adminDashboard", async function (req, res) {
-  const userCount = await User.countDocuments();
-  const user = await User.find({});
-  const pending = await User.find({ response: "" });
-  const scheduled = await User.find({ response: "Scheduled Call" });
-  const pendingCount = pending.length;
-  const scheduledCount = scheduled.length;
-  const associateCount = await Associate.countDocuments();
-  if ((userCount, associateCount)) {
-    res.render("adminDashboard", {
-      user: user,
-      pendingCount: pendingCount,
-      scheduledCount: scheduledCount,
-      pending: pending,
-      scheduled: scheduled,
-      userCount: userCount,
-      associateCount: associateCount,
+  var errorMsg = req.flash("error")[0];
+
+  if (req.isAuthenticated()) {
+    const userCount = await User.countDocuments();
+    const user = await User.find({});
+    const pending = await User.find({ response: "" });
+    const scheduled = await User.find({ response: "Scheduled Call" });
+    const pendingCount = pending.length;
+    const scheduledCount = scheduled.length;
+    const associateCount = await Associate.countDocuments();
+    if ((userCount, associateCount)) {
+      res.render("adminDashboard", {
+        user: user,
+        pendingCount: pendingCount,
+        scheduledCount: scheduledCount,
+        pending: pending,
+        scheduled: scheduled,
+        userCount: userCount,
+        associateCount: associateCount,
+      });
+    }
+  } else {
+    res.render("adminLogin", {
+      errorMsg,
     });
   }
 });
@@ -175,16 +227,70 @@ app.get("/associateDashboard", async function (req, res) {
   var errorMsg = req.flash("error")[0];
 
   if (req.isAuthenticated()) {
+    let scheduledCall = [];
+    let scheduledVisit = [];
+    let pending = [];
     const associate = await Associate.findById(req.user.id, {});
     const assignedClient = associate.assignedClient;
+    assignedClient.map((element) => {
+      if (element.response === "Scheduled Call") {
+        scheduledCall.push(element);
+      } else if (element.response === "Scheduled Visit") {
+        scheduledVisit.push(element);
+      } else if (element.response === "") {
+        pending.push(element);
+      }
+    });
     const assignedClientCount = assignedClient.length;
     res.render("associateDashboard", {
+      scheduledCall: scheduledCall.length,
+      scheduledVisit: scheduledVisit.length,
+      pending: pending.length,
       assignedClientCount: assignedClientCount,
       associate: associate.assignedClient,
       errorMsg,
     });
   } else {
     res.render("associateLogin", {
+      errorMsg,
+    });
+  }
+});
+
+app.get("/salesPersonDashboard", async function (req, res) {
+  var errorMsg = req.flash("error")[0];
+
+  if (req.isAuthenticated()) {
+    let scheduledVisit = [];
+    let reScheduledVisit = [];
+    let converted = [];
+    let pending = [];
+
+    const associate = await SalesPerson.findById(req.user.id, {});
+    const assignedClient = associate.assignedClient;
+    assignedClient.map((element) => {
+      if (element.response === "Scheduled Visit") {
+        scheduledVisit.push(element);
+      } else if (element.response === "Re-Scheduled Visit") {
+        reScheduledVisit.push(element);
+      } else if (element.response === "Converted") {
+        converted.push(element);
+      } else if (element.response === "") {
+        pending.push(element);
+      }
+    });
+    const assignedClientCount = assignedClient.length;
+    res.render("salesPersonDashboard", {
+      scheduledVisit: scheduledVisit.length,
+      reScheduledVisit: reScheduledVisit.length,
+      converted: converted.length,
+      pending: pending.length,
+      assignedClientCount: assignedClientCount,
+      associate: associate.assignedClient,
+      errorMsg,
+    });
+  } else {
+    res.render("salesPersonLogin", {
       errorMsg,
     });
   }
@@ -491,40 +597,84 @@ app.get("/salesPersonTables", function (req, res) {
   });
 });
 
-app.post("/adminLogin", function (req, res) {
-  const user = new Admin({
-    username: req.body.username,
-    password: req.body.password,
-  });
+app.post(
+  "/adminLogin",
+  [
+    passport.authenticate("admin", {
+      failureRedirect: "/adminLogin",
+      failureFlash: true,
+    }),
+  ],
+  function (req, res) {
+    const user = new Admin({
+      username: req.body.username,
+      password: req.body.password,
+    });
 
-  req.login(user, function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("Local1")(req, res, function () {
-        console.log("Login Successfull");
-        res.redirect("/adminDashboard");
-      });
-    }
-  });
-});
+    req.login(user, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        passport.authenticate("admin")(req, res, function () {
+          console.log("Login Successfull");
+          res.redirect("/adminDashboard");
+        });
+      }
+    });
+  }
+);
 
-app.post("/associateLogin", function (req, res) {
-  const user = new Associate({
-    username: req.body.username,
-    password: req.body.password,
-  });
+app.post(
+  "/associateLogin",
+  [
+    passport.authenticate("associate", {
+      failureRedirect: "/associateLogin",
+      failureFlash: true,
+    }),
+  ],
+  function (req, res) {
+    const user = new Associate({
+      username: req.body.username,
+      password: req.body.password,
+    });
 
-  req.login(user, function (err) {
-    if (err) {
-      console.log(err);
-    } else {
-      passport.authenticate("associate")(req, res, function () {
-        res.redirect("/associateDashboard");
-      });
-    }
-  });
-});
+    req.login(user, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        passport.authenticate("associate")(req, res, function () {
+          res.redirect("/associateDashboard");
+        });
+      }
+    });
+  }
+);
+
+app.post(
+  "/salesPersonLogin",
+  [
+    passport.authenticate("salesPerson", {
+      failureRedirect: "/salesPersonLogin",
+      failureFlash: true,
+    }),
+  ],
+  function (req, res) {
+    const user = new SalesPerson({
+      username: req.body.username,
+      password: req.body.password,
+    });
+
+    req.login(user, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        passport.authenticate("salesPerson")(req, res, function () {
+          res.redirect("/salesPersonDashboard");
+        });
+      }
+    });
+  }
+);
 
 app.post("/removeAssociate", async function (req, res) {
   const userId = await User.findById(req.body.userId, {});
@@ -595,6 +745,35 @@ app.post("/changeStatus/:id", async function (req, res) {
         console.log(err);
       } else {
         Associate.findOneAndUpdate(
+          { _id: req.user.id, "assignedClient._id": req.params.id },
+          {
+            $set: {
+              "assignedClient.$.response": req.body.response,
+              "assignedClient.$.comments": req.body.comments,
+            },
+          },
+          function (err, docs) {
+            if (err) {
+              console.log(err);
+            } else {
+              res.redirect(req.get("referer"));
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
+app.post("/changeStatusFromSales/:id", async function (req, res) {
+  User.findByIdAndUpdate(
+    req.params.id,
+    { response: req.body.response, comments: req.body.comments },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        SalesPerson.findOneAndUpdate(
           { _id: req.user.id, "assignedClient._id": req.params.id },
           {
             $set: {
