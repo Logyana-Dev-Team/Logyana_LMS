@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="img/swami.png" type="image/gif" sizes="16x16" />
+    <link rel="icon" href="img/logyana.png" type="image/gif" sizes="16x16" />
 
-    <title>Admin Dashboard | Add Telecallers</title>
+    <title>Admin Dashboard | Add Executives</title>
 
     <!-- Custom fonts for this template -->
     <link
@@ -29,6 +29,18 @@
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/simplebar/dist/simplebar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/tiny-slider/dist/tiny-slider.css"
+    />
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css" />
   </head>
 
   <body id="page-top">
@@ -43,11 +55,11 @@
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
           href="/adminDashboard"
-          style="background-color: #fff; color: #ff9e27"
+          style="background-color: #fff; color: #3968ba"
         >
-          <img src="img/swami.png" width="70" alt="" />
+          <img src="img/logyana.png" width="70" alt="" />
 
-          <div class="sidebar-brand-text">Add Telecaller</div>
+          <div class="sidebar-brand-text">Add Executive</div>
         </a>
 
         <!-- Divider -->
@@ -105,7 +117,7 @@
             aria-controls="collapseTwo"
           >
             <i class="fas fa-user-tie"></i>
-            <span>Telecallers</span>
+            <span>Executives</span>
           </a>
           <div
             id="collapseTwo"
@@ -114,45 +126,15 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Telecaller:</h6>
-              <a class="collapse-item" href="/addAssociate">Add Telecallers</a>
+              <h6 class="collapse-header">Executive:</h6>
+              <a class="collapse-item" href="/addAssociate">Add Executives</a>
               <a class="collapse-item" href="/associateTables"
-                >List Telecallers</a
+                >List Executives</a
               >
             </div>
           </div>
         </li>
-        <hr class="sidebar-divider" />
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseThree"
-            aria-expanded="true"
-            aria-controls="collapseThree"
-          >
-            <i class="fas fa-user-tie"></i>
-            <span>Sales Person</span>
-          </a>
-          <div
-            id="collapseThree"
-            class="collapse"
-            aria-labelledby="headingThree"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Sales Person:</h6>
-              <a class="collapse-item" href="/addSalesPerson"
-                >Add Sales Person</a
-              >
-              <a class="collapse-item" href="/salesPersonTables"
-                >List Sales Person</a
-              >
-            </div>
-          </div>
-        </li>
+
         <!-- Nav Item - Pages Collapse Menu -->
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block" />
@@ -245,9 +227,7 @@
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">
-                  Add Telecaller
-                </h6>
+                <h6 class="m-0 font-weight-bold text-primary">Add Executive</h6>
               </div>
               <div class="card-body">
                 <div class="row justify-content-center">
@@ -297,7 +277,7 @@
                         type="submit"
                         class="btn btn-primary btn-user btn-block addUserBtn"
                       >
-                        Register Telecaller
+                        Register Executive
                       </button>
                     </form>
                   </div>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="img/swami.png" type="image/gif" sizes="16x16" />
+    <link rel="icon" href="img/logyana.png" type="image/gif" sizes="16x16" />
 
     <title>Associate | Login</title>
 
@@ -23,11 +23,23 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/simplebar/dist/simplebar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/tiny-slider/dist/tiny-slider.css"
+    />
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css" />
   </head>
 
   <body
     class="bg-gradient-primary"
-    style="background-image: url(../img/11.webp)"
+    style="background-image: linear-gradient(180deg, #203864 10%, #3968ba 100%)"
   >
     <div class="container">
       <!-- Outer Row -->
@@ -36,7 +48,7 @@
           <div class="card o-hidden border-0 shadow-lg my-5">
             <div class="card-body p-0">
               <!-- Nested Row within Card Body -->
-              <div class="row">
+              <div class="row" style="height: 25rem">
                 <div
                   class="col-lg-6 d-none d-lg-block bg-login-image"
                   style="
@@ -46,42 +58,54 @@
                 <div class="col-lg-6">
                   <div class="p-5">
                     <div class="text-center">
-                      <h1 class="h4 text-gray-900 mb-4">Telecaller Login</h1>
+                      <h1 class="h4 text-gray-900 mb-4">Executive Login</h1>
                     </div>
                     <% if(errorMsg !=null && errorMsg.length>0) {%>
                     <div id="flash-msg" class="alert alert-danger">
                       <%=errorMsg %>
                     </div>
                     <%}%>
-                    <form class="user" action="/associateLogin" method="POST">
-                      <div class="form-group">
+                    <form
+                      class="user"
+                      action="/associateLogin"
+                      method="POST"
+                      novalidate
+                    >
+                      <div class="input-group-overlay form-group">
+                        <div class="input-group-prepend-overlay">
+                          <span class="input-group-text"
+                            ><i class="far fa-envelope"></i
+                          ></span>
+                        </div>
                         <input
+                          class="form-control prepended-form-control"
                           type="email"
-                          class="form-control form-control-user"
-                          id="exampleInputEmail"
+                          placeholder="Email"
                           name="username"
-                          aria-describedby="emailHelp"
-                          placeholder="Enter Email Address..."
+                          required
                         />
                       </div>
-                      <div class="form-group">
-                        <input
-                          type="password"
-                          class="form-control form-control-user"
-                          id="exampleInputPassword"
-                          name="password"
-                          placeholder="Password"
-                        />
+                      <div class="input-group-overlay form-group">
+                        <div class="input-group-prepend-overlay">
+                          <span class="input-group-text"
+                            ><i class="fas fa-lock"></i
+                          ></span>
+                        </div>
+                        <div class="password-toggle">
+                          <input
+                            class="form-control prepended-form-control"
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            required
+                          />
+                        </div>
                       </div>
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-user btn-block"
-                      >
-                        Login
-                      </button>
-                      <hr />
-                      <div class="text-center">
-                        <a class="small" href="/">← Back to home</a>
+                      <hr class="mt-4" />
+                      <div class="text-right pt-4">
+                        <button class="btn btn-primary" type="submit">
+                          <i class="fas fa-sign-in-alt"></i>&nbsp;Sign In
+                        </button>
                       </div>
                     </form>
                   </div>

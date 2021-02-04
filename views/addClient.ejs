@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="img/swami.png" type="image/gif" sizes="16x16" />
+    <link rel="icon" href="img/logyana.png" type="image/gif" sizes="16x16" />
 
     <title>Admin Dashboard | Add Users</title>
 
@@ -29,6 +29,18 @@
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/simplebar/dist/simplebar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/tiny-slider/dist/tiny-slider.css"
+    />
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css" />
   </head>
 
   <body id="page-top">
@@ -43,9 +55,9 @@
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
           href="/adminDashboard"
-          style="background-color: #fff; color: #ff9e27"
+          style="background-color: #fff; color: #3968ba"
         >
-          <img src="img/swami.png" width="70" alt="" />
+          <img src="img/logyana.png" width="70" alt="" />
 
           <div class="sidebar-brand-text">Add Customer</div>
         </a>
@@ -105,7 +117,7 @@
             aria-controls="collapseTwo"
           >
             <i class="fas fa-user-tie"></i>
-            <span>Associates</span>
+            <span>Executives</span>
           </a>
           <div
             id="collapseTwo"
@@ -114,41 +126,10 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Associate:</h6>
-              <a class="collapse-item" href="/addAssociate">Add Associates</a>
+              <h6 class="collapse-header">Executive:</h6>
+              <a class="collapse-item" href="/addAssociate">Add Executives</a>
               <a class="collapse-item" href="/associateTables"
-                >List Associates</a
-              >
-            </div>
-          </div>
-        </li>
-        <hr class="sidebar-divider" />
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseThree"
-            aria-expanded="true"
-            aria-controls="collapseThree"
-          >
-            <i class="fas fa-user-tie"></i>
-            <span>Sales Person</span>
-          </a>
-          <div
-            id="collapseThree"
-            class="collapse"
-            aria-labelledby="headingThree"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Sales Person:</h6>
-              <a class="collapse-item" href="/addSalesPerson"
-                >Add Sales Person</a
-              >
-              <a class="collapse-item" href="/salesPersonTables"
-                >List Sales Person</a
+                >List Executives</a
               >
             </div>
           </div>
@@ -251,44 +232,107 @@
                 <div class="row justify-content-center">
                   <div class="col" style="max-width: 50%">
                     <div class="text-center">
-                      <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                      <h1 class="h4 text-gray-900 mb-4">Add a Customer!</h1>
                     </div>
                     <form class="user" action="/addClient" method="POST">
-                      <div class="form-group">
-                        <input
-                          type="text"
-                          class="form-control form-control-user addUser"
-                          name="name"
-                          id="exampleFirstName"
-                          placeholder="First Name"
-                        />
-                        <input
-                          type="text"
-                          class="form-control form-control-user addUser"
-                          name="lname"
-                          id="exampleLastName"
-                          placeholder="Last Name"
-                        />
+                      <div class="row">
+                        <div class="col-sm-6 form-group">
+                          <label
+                            class="font-weight-medium"
+                            for="unp-standard-price"
+                            >Fist Name</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="name"
+                            id="exampleFirstName"
+                            placeholder="First Name"
+                          />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                          <label
+                            class="font-weight-medium"
+                            for="unp-extended-price"
+                            >Last Name</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="lname"
+                            id="exampleLastName"
+                            placeholder="Last Name"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group pb-2">
+                        <label class="font-weight-medium" for="unp-product-name"
+                          >E-Mail</label
+                        >
                         <input
                           type="email"
-                          class="form-control form-control-user addUser"
+                          class="form-control"
                           name="username"
                           id="exampleInputEmail"
                           placeholder="Email Address"
                         />
+                      </div>
+                      <div class="form-group pb-2">
+                        <label class="font-weight-medium" for="unp-product-name"
+                          >Mobile No</label
+                        >
                         <input
                           type="text"
-                          class="form-control form-control-user addUser"
-                          name="phone"
+                          class="form-control"
                           name="phone"
                           placeholder="Mobile No."
                         />
                       </div>
-                      <button
-                        type="submit"
-                        class="btn btn-primary btn-user btn-block addUserBtn"
-                      >
-                        Register Account
+                      <div class="row">
+                        <div class="col-sm-6 form-group">
+                          <label
+                            class="font-weight-medium"
+                            for="unp-standard-price"
+                            >Business Name</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="businessName"
+                            placeholder="Business Name"
+                          />
+                        </div>
+                        <div class="col-sm-6 form-group">
+                          <label
+                            class="font-weight-medium"
+                            for="unp-extended-price"
+                            >Business Category</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            name="businessCategory"
+                            placeholder="Business Category/Type"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group py-2">
+                        <label
+                          class="font-weight-medium"
+                          for="unp-product-description"
+                          >Business Requirement</label
+                        >
+                        <textarea
+                          class="form-control"
+                          id="clientResponseComment"
+                          rows="4"
+                          name="requirement"
+                          placeholder="Business Information/Requirements"
+                        ></textarea>
+                      </div>
+                      <button class="btn btn-primary btn-block" type="submit">
+                        <i class="czi-cloud-upload font-size-lg mr-2"></i>Add
+                        Customer
                       </button>
                     </form>
                   </div>
@@ -298,17 +342,6 @@
           </div>
           <!-- /.container-fluid -->
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; PROPERTY 2020</span>
-            </div>
-          </div>
-        </footer>
-        <!-- End of Footer -->
       </div>
       <!-- End of Content Wrapper -->
     </div>
@@ -358,6 +391,17 @@
       </div>
     </div>
 
+    <script type="text/javascript">
+      var error = "<%= errorMsg %>";
+
+      if (error != null) {
+        showAlert(error.message);
+      }
+
+      showAlert = function (err) {
+        alert("error: " + err);
+      };
+    </script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

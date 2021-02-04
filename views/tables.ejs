@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="img/swami.png" type="image/gif" sizes="16x16" />
+    <link rel="icon" href="img/logyana.png" type="image/gif" sizes="16x16" />
 
     <title>Admin Dashboard | Customers</title>
 
@@ -30,6 +30,18 @@
       href="vendor/datatables/dataTables.bootstrap4.min.css"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/simplebar/dist/simplebar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/tiny-slider/dist/tiny-slider.css"
+    />
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css" />
   </head>
 
   <body id="page-top">
@@ -47,9 +59,9 @@
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
           href="/adminDashboard"
-          style="background-color: #fff; color: #ff9e27"
+          style="background-color: #fff; color: #3968ba"
         >
-          <img src="img/swami.png" width="70" alt="" />
+          <img src="img/logyana.png" width="70" alt="" />
 
           <div class="sidebar-brand-text">List Customer</div>
         </a>
@@ -109,7 +121,7 @@
             aria-controls="collapseTwo"
           >
             <i class="fas fa-user-tie"></i>
-            <span>Telecallers</span>
+            <span>Executives</span>
           </a>
           <div
             id="collapseTwo"
@@ -118,45 +130,15 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Telecaller:</h6>
-              <a class="collapse-item" href="/addAssociate">Add Telecallers</a>
+              <h6 class="collapse-header">Executive:</h6>
+              <a class="collapse-item" href="/addAssociate">Add Executives</a>
               <a class="collapse-item" href="/associateTables"
-                >List Telecallers</a
+                >List Executives</a
               >
             </div>
           </div>
         </li>
-        <hr class="sidebar-divider" />
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed"
-            href="#"
-            data-toggle="collapse"
-            data-target="#collapseThree"
-            aria-expanded="true"
-            aria-controls="collapseThree"
-          >
-            <i class="fas fa-user-tie"></i>
-            <span>Sales Persons</span>
-          </a>
-          <div
-            id="collapseThree"
-            class="collapse"
-            aria-labelledby="headingThree"
-            data-parent="#accordionSidebar"
-          >
-            <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Sales Person:</h6>
-              <a class="collapse-item" href="/addSalesPerson"
-                >Add Sales Persons</a
-              >
-              <a class="collapse-item" href="/salesPersonTables"
-                >List Sales Persons</a
-              >
-            </div>
-          </div>
-        </li>
+
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block" />
 
@@ -201,7 +183,7 @@
                   aria-expanded="false"
                 >
                   <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    >Admin</span
+                    >Logyana Solutions</span
                   >
                   <img
                     class="img-profile rounded-circle"
@@ -258,21 +240,28 @@
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Email</th>
                         <th>Mobile No.</th>
+                        <th>Business Name</th>
+                        <th>Business Category</th>
+                        <th>Business Requirement</th>
                         <th>Status</th>
                         <th>Comments</th>
-                        <th>Telecaller Assigned</th>
-                        <th>Sales Person Assigned</th>
+                        <th>Executive Assigned</th>
                       </tr>
                     </thead>
 
                     <tbody style="font-size: 15px">
                       <% tableUserData.forEach(function (user){%>
                       <tr>
-                        <td><%= user.name %>&nbsp;<%= user.lname %></td>
-                        <td><%= user.username %></td>
+                        <td>
+                          <a href="/profile/<%= user.id %>"
+                            ><%= user.name %>&nbsp;<%= user.lname %></a
+                          >
+                        </td>
                         <td><%= user.phone %></td>
+                        <td><%= user.businessName %></td>
+                        <td><%= user.businessCategory %></td>
+                        <td><%= user.requirement %></td>
                         <td>
                           <%if (user.response==""||user.response==null) {%>
                           <span
@@ -280,35 +269,41 @@
                             style="width: 100%; color: #000 !important"
                             >Pending</span
                           >
-                          <% }else if (user.response=="Interested"){ %>
+                          <% }else if (user.response=="Called"){ %>
                           <span
                             class="badge rounded-pill bg-success text-dark"
                             style="width: 100%; color: #fff !important"
-                            >Interested</span
+                            >Called</span
                           >
-                          <% }else if(user.response=="Not Interested"){ %>
+                          <% }else if(user.response=="Proposal Sent"){ %>
                           <span
-                            class="badge rounded-pill bg-danger text-dark"
+                            class="badge rounded-pill bg-info text-dark"
                             style="width: 100%; color: #fff !important"
-                            >Not Interested</span
+                            >Proposal Sent</span
                           >
-                          <% }else if(user.response=="Scheduled Call"){ %>
+                          <% }else if(user.response=="Re-Scheduled"){ %>
                           <span
                             class="badge rounded-pill bg-primary text-dark"
                             style="width: 100%; color: #fff !important"
-                            >Scheduled Call</span
+                            >Re-Scheduled</span
                           >
-                          <% }else if(user.response=="Scheduled Visit"){ %>
+                          <% }else if(user.response=="Undergoing"){ %>
                           <span
-                            class="badge rounded-pill bg-success text-dark"
+                            class="badge rounded-pill bg-warning text-dark"
                             style="width: 100%; color: #fff !important"
-                            >Scheduled Visit</span
+                            >Undergoing</span
                           >
                           <% }else if(user.response=="Converted"){ %>
                           <span
                             class="badge rounded-pill bg-success text-dark"
                             style="width: 100%; color: #fff !important"
                             >Converted</span
+                          >
+                          <% }else if(user.response=="Cancelled"){ %>
+                          <span
+                            class="badge rounded-pill bg-danger text-dark"
+                            style="width: 100%; color: #fff !important"
+                            >Cancelled</span
                           >
                           <% } %>
                         </td>
@@ -325,7 +320,7 @@
                               aria-expanded="false"
                               style="width: 100%"
                             >
-                              Assign Telecaller
+                              Assign Executive
                             </button>
                             <div
                               class="dropdown-menu"
@@ -363,56 +358,6 @@
                           </div>
                           <% } %>
                         </td>
-                        <td>
-                          <%if(user.response=="Scheduled Visit"){%>
-                          <%if(user.salesPerson==""){%>
-                          <div id="dropdown" class="dropdown">
-                            <button
-                              class="btn btn-primary btn-sm dropdown-toggle"
-                              type="button"
-                              id="dropdownMenuButton"
-                              data-toggle="dropdown"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                              style="width: 100%"
-                            >
-                              Assign Sales Person
-                            </button>
-                            <div
-                              class="dropdown-menu"
-                              style="width: 100%"
-                              aria-labelledby="dropdownMenuButton"
-                            >
-                              <%salesPerson.forEach(function(salesPerson){%>
-                              <button
-                                class="dropdown-item"
-                                onclick="assignSalesPerson('<%= salesPerson.id %>','<%= user.id %>')"
-                              >
-                                <%= salesPerson.name %> <%= salesPerson.lname %>
-                              </button>
-                              <%})%>
-                            </div>
-                          </div>
-                          <% } else { %>
-                          <div
-                            id="userAssociate"
-                            style="
-                              justify-content: space-between;
-                              display: flex;
-                            "
-                          >
-                            <%= user.salesPerson %>
-                            <div style="display: inline-flex">
-                              <button
-                                class="btn btn-danger btn-sm"
-                                onclick="removeSalesPerson('<%= user.id %>','<%= user.salesPerson %>')"
-                              >
-                                <i class="fas fa-trash"></i>
-                              </button>
-                            </div>
-                          </div>
-                          <%}%> <%}%> <%=user.salesPerson%>
-                        </td>
                       </tr>
                       <%})%>
                     </tbody>
@@ -422,13 +367,6 @@
             </div>
           </div>
         </div>
-        <footer class="sticky-footer bg-white">
-          <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-              <span>Copyright &copy; PROPERTY 2020</span>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
 
@@ -483,6 +421,30 @@
 
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#dataTable").DataTable({
+          initComplete: function () {
+            this.api()
+              .columns(5)
+              .every(function () {
+                var column = this;
+                var select = $(
+                  '<br>Filter: <select class="custom-select custom-select-sm form-control form-control-sm" style="width: 180px;"><option value="">All</option><option value="Called">Called</option><option value="Pending">Pending</option><option value="Proposal Sent">Proposal Sent</option><option value="Re-Scheduled">Re-Scheduled</option><option value="Undergoing">Undergoing</option><option value="Converted">Converted</option><option value="Cancelled">Cancelled</option></select>'
+                )
+                  .appendTo($("#dataTable_filter"))
+                  .on("change", function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column
+                      .search(val ? "^" + val + "$" : "", true, false)
+                      .draw();
+                  });
+              });
+          },
+        });
+      });
+    </script>
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>

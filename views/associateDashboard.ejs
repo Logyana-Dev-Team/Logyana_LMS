@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="icon" href="img/swami.png" type="image/gif" sizes="16x16" />
+    <link rel="icon" href="img/logyana.png" type="image/gif" sizes="16x16" />
 
-    <title>Telecaller | Dashboard</title>
+    <title>Executive | Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link
@@ -29,70 +29,27 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.css" rel="stylesheet" />
+
+    <link href="css/style.css" rel="stylesheet" />
+    <link
+      href="vendor/datatables/dataTables.bootstrap4.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/simplebar/dist/simplebar.min.css"
+    />
+    <link
+      rel="stylesheet"
+      media="screen"
+      href="vendor/tiny-slider/dist/tiny-slider.css"
+    />
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="css/theme.min.css" />
   </head>
 
   <body id="page-top">
-    <!-- <div
-      class="modal"
-      id="responseModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <form action="/changeStatus" method="POST" style="width: 100%">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Client Status</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <label for="clientResponse" class="form-label"
-                >Client Response</label
-              >
-              <select
-                class="form-select"
-                id="clientResponse"
-                aria-label="Default select example"
-                name="response"
-              >
-                <option selected>Select Response</option>
-                <option value="Interested">Interested</option>
-                <option value="Not Interested">Not Interested</option>
-                <option value="Scheduled Call">Scheduled Call</option>
-                <option value="Scheduled Visit">Scheduled Visit</option>
-              </select>
-              <label for="clientResponseComment" class="form-label"
-                >Comments</label
-              >
-              <textarea
-                class="form-control"
-                id="clientResponseComment"
-                rows="3"
-                name="comments"
-              ></textarea>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="submit" class="btn btn-primary">
-                Save changes
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div> -->
     <!-- Page Wrapper -->
     <div id="wrapper">
       <!-- Sidebar -->
@@ -104,11 +61,11 @@
         <a
           class="sidebar-brand d-flex align-items-center justify-content-center"
           href="/associateDashboard"
-          style="background-color: #fff; color: #ff9e27"
+          style="background-color: #fff; color: #3968ba"
         >
-          <img src="img/swami.png" width="70" alt="" />
+          <img src="img/logyana.png" width="70" alt="" />
 
-          <div class="sidebar-brand-text">Telecaller Dashboard</div>
+          <div class="sidebar-brand-text">Executive Dashboard</div>
         </a>
 
         <!-- Divider -->
@@ -118,8 +75,39 @@
         <li class="nav-item active">
           <a class="nav-link" href="/associateDashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Telecaller Dashboard</span></a
+            <span>Executive Dashboard</span></a
           >
+        </li>
+        <hr class="sidebar-divider" />
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+          <a
+            class="nav-link collapsed"
+            href="#"
+            data-toggle="collapse"
+            data-target="#collapseOne"
+            aria-expanded="true"
+            aria-controls="collapseOne"
+          >
+            <i class="fas fa-user"></i>
+            <span>Customers</span>
+          </a>
+          <div
+            id="collapseOne"
+            class="collapse"
+            aria-labelledby="headingOne"
+            data-parent="#accordionSidebar"
+          >
+            <div class="bg-white py-2 collapse-inner rounded">
+              <h6 class="collapse-header">Customers:</h6>
+              <a class="collapse-item" href="/addClientbyExecutive"
+                >Add Customers</a
+              >
+              <a class="collapse-item" href="/customersByAssociatestables"
+                >List Customers</a
+              >
+            </div>
+          </div>
         </li>
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
@@ -136,44 +124,19 @@
           <nav
             class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
           >
+            <!-- Sidebar Toggle (Topbar) -->
+            <form class="form-inline">
+              <button
+                id="sidebarToggleTop"
+                class="btn btn-link d-md-none rounded-circle mr-3"
+              >
+                <i class="fa fa-bars"></i>
+              </button>
+            </form>
+
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
-              <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-              <li class="nav-item dropdown no-arrow d-sm-none">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="searchDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <i class="fas fa-search fa-fw"></i>
-                </a>
-                <!-- Dropdown - Messages -->
-                <div
-                  class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                  aria-labelledby="searchDropdown"
-                >
-                  <form class="form-inline mr-auto w-100 navbar-search">
-                    <div class="input-group">
-                      <input
-                        type="text"
-                        class="form-control bg-light border-0 small"
-                        placeholder="Search for..."
-                        aria-label="Search"
-                        aria-describedby="basic-addon2"
-                      />
-                      <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                          <i class="fas fa-search fa-sm"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </li>
+              <div class="topbar-divider d-none d-sm-block"></div>
 
               <!-- Nav Item - User Information -->
               <li class="nav-item dropdown no-arrow">
@@ -187,9 +150,8 @@
                   aria-expanded="false"
                 >
                   <span class="mr-2 d-none d-lg-inline text-gray-600 small"
-                    ><%= currentUser.name %>&nbsp;<%= currentUser.lname %>
-                  </span>
-
+                    ><%= currentUser.name %>&nbsp;<%= currentUser.lname %></span
+                  >
                   <img
                     class="img-profile rounded-circle"
                     src="img/undraw_profile.svg"
@@ -200,11 +162,6 @@
                   class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                   aria-labelledby="userDropdown"
                 >
-                  <a class="dropdown-item" href="/profile">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
-                  </a>
-                  <div class="dropdown-divider"></div>
                   <a
                     class="dropdown-item"
                     href="#"
@@ -228,7 +185,7 @@
             <div
               class="d-sm-flex align-items-center justify-content-between mb-4"
             >
-              <h1 class="h3 mb-0 text-gray-800">Telecaller Dashboard</h1>
+              <h1 class="h3 mb-0 text-gray-800">Executive Dashboard</h1>
             </div>
 
             <!-- Content Row -->
@@ -262,7 +219,7 @@
                         <div
                           class="text-xs font-weight-bold text-success text-uppercase mb-1"
                         >
-                          Scheduled Calls
+                          Proposal Sent
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
                           <%= scheduledCall %>
@@ -282,7 +239,7 @@
                         <div
                           class="text-xs font-weight-bold text-info text-uppercase mb-1"
                         >
-                          Scheduled Visits
+                          Converted
                         </div>
                         <div class="row no-gutters align-items-center">
                           <div class="col-auto">
@@ -336,8 +293,10 @@
                     <thead>
                       <tr>
                         <th>Name</th>
-                        <th>Email</th>
                         <th>Mobile No.</th>
+                        <th>Business Name</th>
+                        <th>Business Category</th>
+                        <th>Business Requirement</th>
                         <th>Status</th>
                         <th>Comments</th>
                         <th>Actions</th>
@@ -348,9 +307,15 @@
 
                       <form action="/changeStatus/<%= user.id %>" method="POST">
                         <tr>
-                          <td><%= user.name %>&nbsp;<%= user.lname %></td>
-                          <td><%= user.email %></td>
+                          <td>
+                            <a href="/profile/<%= user.id %>"
+                              ><%= user.name %>&nbsp;<%= user.lname %></a
+                            >
+                          </td>
                           <td><%= user.phone %></td>
+                          <td><%= user.businessName %></td>
+                          <td><%= user.businessCategory %></td>
+                          <td><%= user.requirement %></td>
                           <td>
                             <select
                               class="form-select"
@@ -365,16 +330,14 @@
                                 <%= user.response %>
                               </option>
                               <% } %>
-                              <option value="Interested">Interested</option>
-                              <option value="Not Interested">
-                                Not Interested
+                              <option value="Called">Called</option>
+                              <option value="Proposal Sent">
+                                Proposal Sent
                               </option>
-                              <option value="Scheduled Call">
-                                Scheduled Call
-                              </option>
-                              <option value="Scheduled Visit">
-                                Scheduled Visit
-                              </option>
+                              <option value="Re-Scheduled">Re-Scheduled</option>
+                              <option value="Undergoing">Undergoing</option>
+                              <option value="Converted">Converted</option>
+                              <option value="Cancelled">Cancelled</option>
                             </select>
                           </td>
                           <td>
@@ -456,25 +419,6 @@
       </div>
     </div>
 
-    <!-- <script>
-      const button = document.getElementById("responseButton");
-      const txtarea = document.getElementById("clientResponseComment");
-
-      button.style.display = "none";
-
-      txtarea.addEventListener(
-        "keyup",
-        function () {
-          if (this.value.length) {
-            button.style.display = "block";
-          } else {
-            button.style.display = "none";
-          }
-        },
-        false
-      );
-    </script> -->
-    <!-- Bootstrap core JavaScript-->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
@@ -488,10 +432,66 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $("#dataTable").DataTable({
+          initComplete: function () {
+            this.api()
+              .columns(5)
+              .every(function () {
+                var column = this;
+                var select = $(
+                  '<br>Filter: <select class="custom-select custom-select-sm form-control form-control-sm" style="width: 180px;"><option value="">All</option><option value="Called">Called</option><option value="Pending">Pending</option><option value="Proposal Sent">Proposal Sent</option><option value="Re-Scheduled">Re-Scheduled</option><option value="Undergoing">Undergoing</option><option value="Converted">Converted</option><option value="Cancelled">Cancelled</option></select>'
+                )
+                  .appendTo($("#dataTable_filter"))
+                  .on("change", function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column
+                      .search(val ? "^" + val + "$" : "", true, false)
+                      .draw();
+                  });
+              });
+          },
+        });
+      });
+    </script>
 
     <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <script src="js/ajax.js"></script>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
   </body>
 </html>
